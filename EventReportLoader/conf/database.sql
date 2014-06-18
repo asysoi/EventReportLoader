@@ -1,10 +1,11 @@
 CREATE USER  BELTPP_ACTION
     IDENTIFIED BY '123456'
-    TABLESPACE Users;
+    DEFAULT TABLESPACE Users;
     
 ALTER USER BELTPP_ACTION quota 100M on USERS;   
     
 GRANT CREATE SESSION TO BELTPP_ACTION;
+
 GRANT CREATE TABLE TO BELTPP_ACTION;
 GRANT CREATE PROCEDURE TO BELTPP_ACTION;
 GRANT CREATE TRIGGER TO BELTPP_ACTION;
@@ -263,5 +264,43 @@ LOGGING
 NOCOMPRESS 
 NOCACHE
 NOPARALLEL
-MONITORING;               
+MONITORING;  
+
+CREATE SEQUENCE id_report_seq;
+
+ALTER TABLE REPORT_MARK
+MODIFY MARK VARCHAR2(200);
+
+INSERT INTO REPORT_MARK VALUES(1, 'Количество проведенных мероприятий за соответствующий период предыдущего года', 1);
+INSERT INTO REPORT_MARK VALUES(2, 'Количество проведенных мероприятий за отчетный период текущего года', 2);
+INSERT INTO REPORT_MARK VALUES(3, 'Рост(снижение) количества проведенных мероприятий в ед.', 3);
+INSERT INTO REPORT_MARK VALUES(4, 'Рост(снижение) количества проведенных мероприятий в процентах', 4);
+
+INSERT INTO REPORT_MARK VALUES(5, 'Объем оказанных услуг за соответствующий период предыдущего года', 5);
+INSERT INTO REPORT_MARK VALUES(6, 'Объем оказанных услуг за отчетный период текущего года', 6);
+INSERT INTO REPORT_MARK VALUES(7, 'Рост(снижение) объема оказанных услуг в ед.', 7);
+INSERT INTO REPORT_MARK VALUES(8, 'Рост(снижение) объема оказанных услуг в процентах', 8);
+
+INSERT INTO REPORT_MARK VALUES(9, 'Удельный вес в объеме услуг внешнеэкономического характера в %.', 9);
+INSERT INTO REPORT_MARK VALUES(10, 'Удельный вес в общем объеме оказанных отделением услуг в %', 10);
+
+
+CREATE TABLE C_OTD
+   (	"OTD_ID" NUMBER, 
+	"OTD_NAME" VARCHAR2(255 BYTE), 
+	"OTD_NAME_SYN" VARCHAR2(100 BYTE), 
+	"OTD_ADDRESS_INDEX" VARCHAR2(15 BYTE), 
+	"OTD_ADDRESS_CITY" VARCHAR2(15 BYTE), 
+	"OTD_ADDRESS_LINE" VARCHAR2(50 BYTE), 
+	"OTD_ADDRESS_HOME" VARCHAR2(10 BYTE), 
+	"OTD_ADDRESS_EXP" DATE, 
+	 CONSTRAINT "PK_OTD" PRIMARY KEY ("OTD_ID"));
+
+
+Insert into beltpp_action.C_OTD (OTD_ID,OTD_NAME,OTD_NAME_SYN,OTD_ADDRESS_INDEX,OTD_ADDRESS_CITY,OTD_ADDRESS_LINE,OTD_ADDRESS_HOME,OTD_ADDRESS_EXP) values (1,'Минское оделение','MN',null,null,null,null,null);
+Insert into beltpp_action.C_OTD (OTD_ID,OTD_NAME,OTD_NAME_SYN,OTD_ADDRESS_INDEX,OTD_ADDRESS_CITY,OTD_ADDRESS_LINE,OTD_ADDRESS_HOME,OTD_ADDRESS_EXP) values (2,'Могилевское',null,null,null,null,null,null);
+Insert into beltpp_action.C_OTD (OTD_ID,OTD_NAME,OTD_NAME_SYN,OTD_ADDRESS_INDEX,OTD_ADDRESS_CITY,OTD_ADDRESS_LINE,OTD_ADDRESS_HOME,OTD_ADDRESS_EXP) values (3,'Гродненсен',null,null,null,null,null,null);
+Insert into beltpp_action.C_OTD (OTD_ID,OTD_NAME,OTD_NAME_SYN,OTD_ADDRESS_INDEX,OTD_ADDRESS_CITY,OTD_ADDRESS_LINE,OTD_ADDRESS_HOME,OTD_ADDRESS_EXP) values (4,'Еомельское',null,null,null,null,null,null);
+Insert into beltpp_action.C_OTD (OTD_ID,OTD_NAME,OTD_NAME_SYN,OTD_ADDRESS_INDEX,OTD_ADDRESS_CITY,OTD_ADDRESS_LINE,OTD_ADDRESS_HOME,OTD_ADDRESS_EXP) values (5,'Витебское',null,null,null,null,null,null);
+INSERT INTO "BELTPP_ACTION"."C_OTD" (OTD_ID, OTD_NAME, OTD_NAME_SYN) VALUES ('6', 'Брестское отделение', 'Вт')
 

@@ -6,24 +6,41 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.Iterator;
 
+import org.apache.log4j.Logger;
 import org.apache.poi.hssf.usermodel.HSSFSheet;
 import org.apache.poi.hssf.usermodel.HSSFWorkbook;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.context.support.AbstractXmlApplicationContext;
+import org.springframework.context.support.FileSystemXmlApplicationContext;
+
+import cci.report.service.ReportService;
+
 
 public class ReportLoaderApplication {
 
+	static final Logger LOG = Logger.getLogger(ReportLoaderApplication.class);
+
 	public static void main(String[] args) {
-		(new ReportLoaderApplication()).readFromXLSFile();
+        LOG.info("Certificate Loader started");  
+		
+		AbstractXmlApplicationContext context = new FileSystemXmlApplicationContext(
+				"conf/jdbcconfig.xml");
+		
+		ReportService service = context.getBean("ReportService",
+			ReportService.class);
+		
+		service.loadReport();
+	
 	}
 
 	public void readFromXLSFile() {
 
 		try {
 			FileInputStream file = new FileInputStream(new File(
-					"D:\\Asysoi\\База мероприятий\\Report.xls"));
+					"Report.xls"));
 
 			HSSFWorkbook workbook = new HSSFWorkbook(file);
 			HSSFSheet sheet = workbook.getSheetAt(0);
@@ -40,19 +57,19 @@ public class ReportLoaderApplication {
 							+ " : "
 							+ cell.getColumnIndex()
 							+ " Value : "
-							+ (cell.getCellType() > 0 ? cell
+							+ (cell.getCellType() == Cell.CELL_TYPE_STRING ? cell
 									.getStringCellValue() : cell
 									.getNumericCellValue()));
 
 					switch (cell.getCellType()) {
 					case Cell.CELL_TYPE_BOOLEAN:
-						System.out.println(cell.getBooleanCellValue() + "\t\t");
+						LOG.info(cell.getBooleanCellValue() + "\t\t");
 						break;
 					case Cell.CELL_TYPE_NUMERIC:
-						System.out.println(cell.getNumericCellValue() + "\t\t");
+						LOG.info(cell.getNumericCellValue() + "\t\t");
 						break;
 					case Cell.CELL_TYPE_STRING:
-						System.out.println(cell.getStringCellValue() + "\t\t");
+						LOG.info(cell.getStringCellValue() + "\t\t");
 						break;
 
 					}
@@ -64,29 +81,28 @@ public class ReportLoaderApplication {
 			file.close();
 
 		} catch (FileNotFoundException e) {
-		    e.printStackTrace();
+			LOG.error(e.getStackTrace());
 		} catch (IOException e) {
-		    e.printStackTrace();
+			LOG.error(e.getStackTrace());
 		}
 	}
-
 
 	public void readFromXLSXFile() {
 
 		try {
 			FileInputStream file = new FileInputStream(new File(
 					"D:\\Asysoi\\База мероприятий\\Report.xlsx"));
-    		XSSFWorkbook workbook = new XSSFWorkbook(file);
-    		XSSFSheet sheet = workbook.getSheetAt(0);
-    		
-            //  ....  
-    		
+			XSSFWorkbook workbook = new XSSFWorkbook(file);
+			XSSFSheet sheet = workbook.getSheetAt(0);
+
+			// ....
+
 			file.close();
 
 		} catch (FileNotFoundException e) {
-		    e.printStackTrace();
+			e.printStackTrace();
 		} catch (IOException e) {
-		    e.printStackTrace();
+			e.printStackTrace();
 		}
 	}
 }
